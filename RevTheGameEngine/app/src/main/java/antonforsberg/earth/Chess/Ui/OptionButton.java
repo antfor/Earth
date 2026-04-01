@@ -1,0 +1,97 @@
+package anton.forsberg.earth.Chess.Ui;
+
+import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import anton.forsberg.earth.GUI.Buttons.Button2D;
+import anton.forsberg.earth.Interfaces.Desplay;
+import anton.forsberg.earth.R;
+import anton.forsberg.earth.comobject.LoadObjectAssets;
+
+/**
+ * Created by Anton Forsberg on 2017-12-19.
+ */
+
+public class OptionButton extends Button2D {
+
+private Context context;
+private optionback back;
+private Text Text;
+private boolean preesed;
+private boolean  showvictory;
+private List<Desplay> buttons=new ArrayList<>(5);
+    public OptionButton(Context mActivityContext) {
+        super(mActivityContext);
+        context=mActivityContext;
+        loadAssets();
+        viewUpdate();
+        back=new optionback(context);
+        Text=new Text(context);
+
+
+    }
+
+    public void addButton(Desplay b){
+        buttons.add(b);
+    }
+
+    @Override
+    public void viewUpdate() {
+        button2dDp(24,0,24,0,48,48,3);
+    }
+
+    private void loadAssets(){
+        LoadObjectAssets o=new LoadObjectAssets(context);
+        setimage(o.LoadImageAsset(R.drawable.settingsbutton));
+
+    }
+    @Override
+    public void draw(float [] mMVPMatrix,float [] mProjectionMatrix,float [] mViewMatrix,float [] mModelMatrix){
+        if(preesed){
+            back.draw(mMVPMatrix, mProjectionMatrix, mViewMatrix, mModelMatrix);
+
+
+            if(showvictory) {
+                Text.showVictory();
+            }
+            else {
+                Text.showPaused();
+            }
+            Text.draw(mMVPMatrix, mProjectionMatrix, mViewMatrix, mModelMatrix);
+
+            for (int i = 0; i < buttons.size(); i++) {
+                buttons.get(i).draw(mMVPMatrix, mProjectionMatrix, mViewMatrix, mModelMatrix);
+
+            }
+
+        }
+
+        super.draw(mMVPMatrix, mProjectionMatrix, mViewMatrix, mModelMatrix);
+    }
+
+    @Override
+    public void function() {
+    preesed=!preesed;
+    }
+
+    public boolean isPressed(float x ,float y){
+        super.isPressed(x,y);
+    if(preesed) {
+    for (int i = 0; i < buttons.size(); i++) {
+        if(buttons.get(i).isPressed(x, y)){
+            preesed=false;
+            showvictory=false;
+        }
+    }
+    }
+        return preesed;
+    }
+
+    public void setVictory(){
+        showvictory=true;
+        function();
+    }
+
+}
