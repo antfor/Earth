@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Chess-and-AndroidGameEngine"
+rootProject.name = "Earth"
 include(":app")

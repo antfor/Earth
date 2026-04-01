@@ -3,8 +3,10 @@ package anton.forsberg.earth.Chess.ChessObjects;
 import android.content.Context;
 
 import anton.forsberg.earth.R;
+import anton.forsberg.earth.Stuff.earth;
 import anton.forsberg.earth.comMesh.FinalMesh;
 import anton.forsberg.earth.comobject.LoadObjectAssets;
+import anton.forsberg.earth.comobject.objectAssets.newEarth;
 
 /**
  * Created by Anton Forsberg on 2017-12-05.
