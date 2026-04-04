@@ -7,7 +7,7 @@
 
 A globe I made to try out normal mapping in my old game engine back when I was learning to program.
 
-<!-- <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/google-play.svg" width="15pt" height="15pt"> Google Play: https://play.google.com/store/apps/details?id=anton.forsberg.earth -->
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/brands/google-play.svg" width="15pt" height="15pt"> Google Play: https://play.google.com/store/apps/details?id=anton.forsberg.earth
 
 
 <table>
