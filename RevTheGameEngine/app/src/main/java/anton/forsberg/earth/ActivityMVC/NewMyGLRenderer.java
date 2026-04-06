@@ -27,6 +27,8 @@ import anton.forsberg.earth.GUI.ScreenData;
 import anton.forsberg.earth.Global.GLview;
 import anton.forsberg.earth.Interfaces.DrawebleOrtographic;
 import anton.forsberg.earth.Interfaces.DraweblePerspectiv;
+import anton.forsberg.earth.Stuff.earth;
+import anton.forsberg.earth.comMesh.FinalMesh;
 import anton.forsberg.earth.comMesh.Objects.reflect;
 import anton.forsberg.earth.comobject.RotQ;
 import anton.forsberg.earth.comobject.Skycubemap;
@@ -53,6 +55,8 @@ public class NewMyGLRenderer  implements GLSurfaceView.Renderer{
     private Context mActivityContext;
     private static float[] cam =new float[9];
 
+    FinalMesh newEarth;
+
     public NewMyGLRenderer(final Context activityContext){
         mActivityContext=activityContext;
     }
@@ -67,6 +71,10 @@ public class NewMyGLRenderer  implements GLSurfaceView.Renderer{
     private float[] mMVPMatrix = new float[16];
 
     private float[] mRotationMatrix = new float[16];
+
+    float dx,dy = 0;
+    boolean down = false;
+    RotQ rotq = new RotQ();;
 
     double angx=0;
     public double getangx(){return angx;}
@@ -131,26 +139,26 @@ public class NewMyGLRenderer  implements GLSurfaceView.Renderer{
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
         // Set the background clear color to black.
 
-      //  GLES20.glClearColor(0.02f, 0.02f, 0.02f, 0.0f);
-     //   GLES30.glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
-        GLES30.glClearColor(98f/255f, 117f/255f, (127f/255f),0);
+        GLES30.glClearColor(0.02f, 0.02f, 0.02f, 0.0f);
+        //   GLES30.glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+        //GLES30.glClearColor(98f/255f, 117f/255f, (127f/255f),0);
         //GLES30.glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
 
         // GLES20.glEnable(GLES20.GL_CULL_FACE);
 
         // Enable depth testing
-      //  GLES30.glEnable(GLES30.GL_CULL_FACE);
+        //  GLES30.glEnable(GLES30.GL_CULL_FACE);
         //GLES30.glCullFace(GLES30.GL_FRONT);
         GLES30.glCullFace(GLES30.GL_BACK);
 
-       GLES30.glEnable(GLES30.GL_DEPTH_TEST);
+        GLES30.glEnable(GLES30.GL_DEPTH_TEST);
 
-       GLES30.glBlendFunc(GLES30. GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA);
+        GLES30.glBlendFunc(GLES30. GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA);
         GLES30.glEnable(GLES30.GL_BLEND );
         // Position the eye in front of the origin.
         final float eyeX = 0.0f;
         final float eyeY = 0.0f;
-        final float eyeZ = 0f;
+        final float eyeZ = -3f;
 
         // We are looking toward the distance
         final float lookX = 0.0f;
@@ -176,7 +184,9 @@ public class NewMyGLRenderer  implements GLSurfaceView.Renderer{
         cam[7]=upY;
         cam[8]=upZ;
 
-
+        if (newEarth == null) {
+            newEarth = new newEarth(mActivityContext);
+        }
     }
 
     float ratio;
@@ -237,45 +247,22 @@ public class NewMyGLRenderer  implements GLSurfaceView.Renderer{
 
 
         Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.setIdentityM(mViewMatrix, 0);
 
 
         GLES30.glDepthMask(false);
 
-       // skymap.draw(mMVPMatrix,mProjectionMatrix,mViewMatrix, mModelMatrix);
-
-
         GLES30.glDepthMask(true);
 
-
-      /*  float fa =3;
-        Matrix.translateM(mModelMatrix,0,0,0,-ratio*fa);
-        Matrix.scaleM(mModelMatrix,0,ratio*fa,ratio*fa,ratio*fa);
-*/
-        RotQ rotq= new RotQ();
-      //  Matrix.translateM(mViewMatrix,0,0,-2f,-3);
-      // Matrix.translateM(mModelMatrix,0, 0, 0f, 0.6f);
+        rotq.rotate(mvx,mvy,mvz,mang);
+        //resetrot();
+        rotq.matrix(mModelMatrix);
 
 
-       // rotq.matrix(mModelMatrix);
+        //Matrix.translateM(mViewMatrix,0,0,0,-3);
 
-
-
-        for (int i = 0; i < draweblePerspectivs.size(); i++) {
-            draweblePerspectivs.get(i).draw(mMVPMatrix,mProjectionMatrix,mViewMatrix, mModelMatrix);
-        }
+        newEarth.draw(mMVPMatrix,mProjectionMatrix,mViewMatrix, mModelMatrix);
 
         Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.setIdentityM(mViewMatrix, 0);
-
-        for (int i = 0; i < drawebleOrtographics.size(); i++) {
-            drawebleOrtographics.get(i).drawO(mMVPMatrix,mUiMatrix,mViewMatrix, mModelMatrix);
-        }
-
-
-
-        Matrix.setIdentityM(mModelMatrix, 0);
-        Matrix.setIdentityM(mViewMatrix, 0);
 
     }
 }

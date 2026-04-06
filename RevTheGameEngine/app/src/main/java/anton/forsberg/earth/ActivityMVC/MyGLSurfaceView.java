@@ -11,7 +11,10 @@ import anton.forsberg.earth.ActivityMVC.NewMyGLRenderer;
 import anton.forsberg.earth.Chess.GameOfChess;
 import anton.forsberg.earth.Interfaces.ControllerListener;
 import anton.forsberg.earth.Interfaces.DraweblePerspectiv;
+import anton.forsberg.earth.Stuff.earth;
 import anton.forsberg.earth.UserInput.UiPressListener;
+import anton.forsberg.earth.comMesh.FinalMesh;
+import anton.forsberg.earth.comobject.objectAssets.newEarth;
 
 /**
  * Created by Anton Forsberg on 2017-07-05.
@@ -21,6 +24,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     private final NewMyGLRenderer mRenderer;
     private GameOfChess gameOfChess;
+
+
 
     private List<ControllerListener> controllerListeners= new ArrayList<>(10);
     private List<UiPressListener> pressListeners= new ArrayList<>(10);
@@ -35,15 +40,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
         mRenderer = new NewMyGLRenderer(context);
 
         setRenderer(mRenderer);
-
-
-
-        gameOfChess=new GameOfChess(context);
-        mRenderer.addDPP(gameOfChess);
-        mRenderer.addOrtP(gameOfChess);
-        pressListeners.add(gameOfChess);
-
-      // updateLoop.addDeltaTimeListnerer(gameOfChess);
     }
 
 
@@ -64,33 +60,44 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
 
         float x = e.getX(index);
-        float y = e.getY(index);
+        float y = -e.getY(index);
         float dx = x - mPreviousX;
         float dy = y - mPreviousY;
 
 
-        switch (action) {
-            case MotionEvent.ACTION_MOVE: break;
 
-            case MotionEvent.ACTION_DOWN: break;
-            case MotionEvent.ACTION_UP:
-                for (int i = 0; i <pressListeners.size() ; i++) {
-                    pressListeners.get(i).press(x,y);
-                }
+
+        switch (action) {
+
+            case MotionEvent.ACTION_DOWN:
+                mRenderer.resetrot();
+                // Initialize previous coordinates so it doesn't "jump" on first touch
+                mPreviousX = x;
+                mPreviousY = y;
+
+                mRenderer.dx = 0;
+                mRenderer.dy = 0;
+                mRenderer.down = true;
                 break;
 
-            case MotionEvent.ACTION_POINTER_DOWN:   break;
+            case MotionEvent.ACTION_MOVE:
+                float angle = (Math.abs(dx) + Math.abs(dy));
+                mRenderer.resetrot();
+                if(angle > 2)
+                    mRenderer.rottuch(x, y, mPreviousX, mPreviousY, 1);
 
-            case MotionEvent.ACTION_POINTER_UP:
-                for (int i = 0; i <pressListeners.size() ; i++) {
-                    pressListeners.get(i).press(x,y);
-                }
 
+                // If you set RENDERMODE_WHEN_DIRTY, uncomment this:
+                // requestRender();
+
+                mPreviousX = x;
+                mPreviousY = y;
+                break;
+            case MotionEvent.ACTION_UP:
                 break;
         }
 
-        mPreviousX = x;
-        mPreviousY = y;
+
         return true;
     }
 
