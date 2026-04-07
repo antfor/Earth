@@ -1186,25 +1186,25 @@ private boolean usetex=false;
                         "vec4 normapcol=texture2D(u_normaltex, v_TexCoordinate);   \n"+
                         "vec4 normask=texture2D(u_glosstex, v_TexCoordinate);   \n"+
                         "vec3 endnorvec; \n"+
-                        " endnorvec.x= (normapcol.x*2.0f-1.0f)*(normask.x*-1.0f+1.0);  \n" +
-                        " endnorvec.y= -1.0*(normapcol.y*2.0f-1.0f)*(normask.y*-1.0f+1.0);  \n" +
-                        " endnorvec.z= (normapcol.z*-2.0f+1.0f)*(normask.z*-1.0f+1.0);  \n" +
+                        " endnorvec.x= (normapcol.x*2.0-1.0)*(normask.x*-1.0+1.0);  \n" +
+                        " endnorvec.y= -1.0*(normapcol.y*2.0-1.0)*(normask.y*-1.0+1.0);  \n" +
+                        " endnorvec.z= (normapcol.z*-2.0+1.0)*(normask.z*-1.0+1.0);  \n" +
                         " vec3 Normal=normalize(v_Normal+endnorvec);\n"+
 
-                        "   float rug =0.3f;  \n"+
+                        "   float rug =0.3;  \n"+
                         // "rug=1.0;"+
                         //"   rug =texture2D(u_glosstex, v_TexCoordinate).x;  \n"+
 
                         //   "rug=0.3;"+
 
                         //cook
-                        "float spec=0.1f; \n"
+                        "float spec=0.1; \n"
                         //  +"spec=1.0;"
 
-                        +"float defuse = 1.0f-spec; \n"
-                        +"vec4 Seccol=vec4(0.5,0.5,0.5,1) ;\n"
+                        +"float defuse = 1.0-spec; \n"
+                        +"vec4 Seccol=vec4(0.5,0.5,0.5,1.0) ;\n"
 
-                        +"vec3 campos=vec3(0.0f,0.0f,-0.5f);\n"
+                        +"vec3 campos=vec3(0.0,0.0,-0.5);\n"
                         //ändra
                         +"vec3 V=normalize(campos - v_Position);\n"
                         +"\n"
@@ -1219,31 +1219,31 @@ private boolean usetex=false;
                         +"float ldoth=dot(lightVector,H);\n"
 
                         //byt rug till rug*rug
-                        +"float Dtwo = rug*rug/(3.14159265359f* (1.0f+(rug*rug-1.0f)*ndoth*ndoth)*(1.0f+(rug*rug-1.0f)*ndoth*ndoth));  \n"
-                        +"float Dmask = rug*rug/(3.14159265359f* (1.0f+(rug*rug-1.0f)*(ldoth*ldoth))*(1.0f+(rug*rug-1.0f)*(ldoth*ldoth)));  \n"
+                        +"float Dtwo = rug*rug/(3.14159265359* (1.0+(rug*rug-1.0)*ndoth*ndoth)*(1.0+(rug*rug-1.0)*ndoth*ndoth));  \n"
+                        +"float Dmask = rug*rug/(3.14159265359* (1.0+(rug*rug-1.0)*(ldoth*ldoth))*(1.0+(rug*rug-1.0)*(ldoth*ldoth)));  \n"
                         //   +"  float mask =(1.0f+(rug*rug-1.0f)*ndoth*ndoth)*(1.0f+(rug*rug-1.0f)*ndoth*ndoth); \n"
 
-                        + "   float expL = pow((1.0f-dot(v_Normal, lightVector)),5.0f);  \n"
-                        + "   float expV = pow((1.0f-dot(v_Normal, V)),5.0f);  \n"
+                        + "   float expL = pow((1.0-dot(v_Normal, lightVector)),5.0);  \n"
+                        + "   float expV = pow((1.0-dot(v_Normal, V)),5.0);  \n"
                         ///+ "   float Fd= 0.5f+2.0f * rug *cos(acos(dot(v_Normal, lightVector))*acos(dot(v_Normal, lightVector))); \n"
 
-                        + "   float expfd = pow((dot(v_Normal, lightVector)),2.0f);  \n"
-                        + "   float Fd= 0.5f+2.0f * rug *expfd; \n"+
+                        + "   float expfd = pow((dot(v_Normal, lightVector)),2.0);  \n"
+                        + "   float Fd= 0.5+2.0 * rug *expfd; \n"+
 
 //1.2 refindm
-                        "float refIndw=1.0f;"+ "float refIndm=1.2f;"+"float Rzero=(refIndw-refIndm)/(refIndw+refIndm);"+
-                        "float Ferschlic=1.0-(Rzero+(1.0f-Rzero)*(pow((1.0f-ndotv),5.0f)));"
+                        "float refIndw=1.0;"+ "float refIndm=1.2;"+"float Rzero=(refIndw-refIndm)/(refIndw+refIndm);"+
+                        "float Ferschlic=1.0-(Rzero+(1.0-Rzero)*(pow((1.0-ndotv),5.0)));"
 
-                        +"float Fcook= (1.0f+(Fd-1.0f)*(1.0f-expL))*(1.0f+(Fd-1.0f)*(1.0f-expV)); \n"
-                        +"float Dcook =20.0f*exp(-1.0f*(alpha*alpha/(rug*rug))); \n"
+                        +"float Fcook= (1.0+(Fd-1.0)*(1.0-expL))*(1.0+(Fd-1.0)*(1.0-expV)); \n"
+                        +"float Dcook =20.0*exp(-1.0*(alpha*alpha/(rug*rug))); \n"
 
                         +"float Dbeckham =3.0/(rug*rug*ndoth*ndoth*ndoth*ndoth)*exp(-1.0*(tan(alpha)*tan(alpha)/rug/rug)); \n"
 
-                        +"float G =min((2.0f*ndoth*ndotv/vdoth),(2.0f*ndoth*ndotl/vdoth)); \n"
-                        +"G= min(1.0f,G);\n"
-                        +"float cook=Dbeckham*(Ferschlic)*G/(3.14159265359f*ndotv); \n"
-                        +" cook=(Dbeckham+(Ferschlic)+G)/(3.14159265359f*ndotv); "
-                        +"vec4 Scolor = vec4(cook/3.14159265359f*spec,cook/3.14159265359f*spec,cook/3.14159265359f*spec,1);\n"+
+                        +"float G =min((2.0*ndoth*ndotv/vdoth),(2.0*ndoth*ndotl/vdoth)); \n"
+                        +"G= min(1.0,G);\n"
+                        +"float cook=Dbeckham*(Ferschlic)*G/(3.14159265359*ndotv); \n"
+                        +" cook=(Dbeckham+(Ferschlic)+G)/(3.14159265359*ndotv); "
+                        +"vec4 Scolor = vec4(cook/3.14159265359*spec,cook/3.14159265359*spec,cook/3.14159265359*spec,1);\n"+
 
 
 
@@ -1255,8 +1255,8 @@ private boolean usetex=false;
 
                         //läggtill
                         "  float alt=(1.0 / (1.0 + (0.10 * distance)));  \n"+
-                        "float ambient=0.2f; \n"+
-                        " ambient=0.1f; \n"+
+                        "float ambient=0.2; \n"+
+                        " ambient=0.1; \n"+
                         "  diffuse +=ambient;\n"+
                         "diffuse=min(diffuse,1.0); \n" +
                         "\t// Multiply the color by the diffuse illumination level and texture value to get final output color.\n" +
@@ -1269,7 +1269,7 @@ private boolean usetex=false;
                         //(texture2D(u_Texture, v_TexCoordinate)+((0.4*(1.0-Ferschlic))))
                         "   gl_FragColor =(v_Color* diffuse*defuse *(texture2D(u_Texture, v_TexCoordinate)+((0.4*(1.0-Ferschlic))))* texture2D(u_oclusiontex, v_TexCoordinate)+Scolor* texture2D(u_glosstex, v_TexCoordinate));  \n" +
 
-                        "   gl_FragColor =(v_Color*pow(diffuse,(1.0f/2.0f))*defuse *(texture2D(u_Texture, v_TexCoordinate)+((0.4*(1.0-Ferschlic))))* texture2D(u_oclusiontex, v_TexCoordinate)+Scolor* texture2D(u_glosstex, v_TexCoordinate));  \n" +
+                        "   gl_FragColor =(v_Color*pow(diffuse,(1.0/2.0))*defuse *(texture2D(u_Texture, v_TexCoordinate)+((0.4*(1.0-Ferschlic))))* texture2D(u_oclusiontex, v_TexCoordinate)+Scolor* texture2D(u_glosstex, v_TexCoordinate));  \n" +
 
                         // "vec4 bob; bob.x=Normal.x;bob.y=Normal.y;bob.z=Normal.z;bob.w=0.0f;"+
                         // "   gl_FragColor = (v_Color*Ferschlic);"+
